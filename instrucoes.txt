@@ -1,0 +1,76 @@
+Trabalho
+
+Implementar algoritmo do valentão
+
+Execução do programa:
+	programa arquivo_config.txt linha		, onde
+		linha indica qual o nodo que está rodando o programa
+		
+	arquivo_config.txt		 ,onde cada linha é composta por
+		id(int) host<ip>(string) porta(int)
+	
+	
+Comportamento
+	-- Todos os programas devem estar rodando antes do algoritmo iniciar
+	-- O programa com o maior ID é o coordenador inicial
+	-- Heartbeat a cada 3 segundos, e recebem confirmação do coordenador
+	-- Caso não receba confirmação, o nodo que não recebeu inicia uma nova eleição (devemos criar algum marcador que indique que está rodando a eleição?)
+	-- Coordenador fica ativo por 10 segundos respondendo os heartbeats, depois "cai" e não retorna mais
+
+
+
+Classes:
+	node:
+		id : int
+		host : string
+		port : int
+		isCoordinator : bool
+		isActive : bool
+		timer : int
+		greatherNodes : list<nodes>
+		counterActives : int
+		
+	main:
+		isRunningElection : bool
+		listedNodes : list<nodes>
+		activeNodes : list<nodes>
+		canStart : bool
+		
+	
+	Heartbeat em thread separada
+	
+	O nó precisa conhecer todos os maiores que ele. Como pode ser feito esse controle?
+		Cada um dos programas sabe quem são os maiores que ele (pelo arquivo config)
+		
+	
+	Algoritmo do valentão
+		solicita ao servidor o id dos maiores. e dai manda mensagem.
+		
+	
+	
+	
+		
+	
+####################################################################################################
+
+
+main
+	
+	abre o arquivo config
+	armazena lista _participantes com quantos participantes podem existir
+	
+	enquanto (todos não estiverem conectados)
+		envia mensagem (get) para todos os participantes na lista _participantes e aguarda response
+		caso receba ok, seta participante ok na lista
+	
+	// se chegou aqui, é porque todos estão online
+	
+	procura maior ID na lista _participantes
+	se _meuId for igual a _maiorId
+		envia mensagem (put) informando que é o coordenador
+	
+	
+	
+	
+	tenta enviar mensagem (get) para saber se os demais estão ativo.
+	
