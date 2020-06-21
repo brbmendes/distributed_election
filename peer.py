@@ -15,9 +15,11 @@ class Status(Resource):
 		msg = "meu id eh " + str(me.id)
 		return msg, 200
 
+	# Put é usado para avisar que outro nodo esta ativo
 	def put(self):
 		return "PUT OK", 201
 	
+	# Post é usado para aviasr que é o novo coordenador
 	def post(self):
 		return "POST OK", 201
 
@@ -26,12 +28,10 @@ class Node:
 		self.id = id
 		self.host = host
 		self.port = port
-		self.isCoordinator = isCoordinator
 		self.isActive = isActive
 		self.timer = timer
 		self.greatherNodes = greatherNodes
 		self.lesserNodes = lesserNodes
-		self.counterActives = counterActives
 
 class RunFlask:
 	def __init__(self, app,myIp,myPort):
@@ -45,6 +45,7 @@ class RunFlask:
 
 api.add_resource(Status, "/status/")
 
+# Basic info about program
 coordinator = None
 activeNodes = []
 canStart = False
@@ -70,7 +71,7 @@ myIp = splittedInfo[1]
 myPort = splittedInfo[2]
 
 # Create my node
-me = Node(myId,myIp,myPort,False,True,10,[],[],1)
+me = Node(myId,myIp,myPort,True,10,[],[])
 
 # Add my node to lists
 activeNodes.append(me)
@@ -81,7 +82,7 @@ lines.pop(line-1)
 # Create other nodes, define nodes greather than me and lesser than me
 for i in lines:
 	splittedInfo = i.split(" ")
-	node = Node(splittedInfo[0],splittedInfo[1],splittedInfo[2],False,True,10,[],[],1)
+	node = Node(splittedInfo[0],splittedInfo[1],splittedInfo[2],True,10,[],[])
 	if(myId > int(splittedInfo[0])):
 		me.lesserNodes.append(node)
 	else:
@@ -90,9 +91,18 @@ for i in lines:
 # Define me as coordinator
 coordinator = me
 
+# Run webservice in separated thread to receive messages
 example=RunFlask(app,myIp,myPort)
 
+count = 0
+while not canStart:
+	if canStart:
+		break
+	print("not started")
+	time.sleep(2)
+	count += 1
+	if(count > 3):
+		canStart = True
+	
 
-while 1:
-	print("id do coordenador: ", coordinator.id)
-	time.sleep(3)
+print("encerrou")
