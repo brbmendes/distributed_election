@@ -94,7 +94,7 @@ for i in me.greatherNodes:
 	print(i.id)
 
 print("sort")
-me.greatherNodes.sort(key=id)
+me.greatherNodes.sort(key=self.id, reversed=True)
 
 for i in me.greatherNodes:
 	print(i.id)
