@@ -31,9 +31,6 @@ class Node:
 		self.timer = timer
 		self.greatherNodes = greatherNodes
 		self.lesserNodes = lesserNodes
-	
-	def get_id(node):
-		return 
 
 class RunFlask:
 	def __init__(self, app,myIp,myPort):
