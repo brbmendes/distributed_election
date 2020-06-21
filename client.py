@@ -5,46 +5,45 @@ import socket,sys
 BUFFER_SIZE = 1024  # Normally 1024, but we want fast response
 
 line = int(sys.argv[2])
+print(line)
 
 f = open("arquivo_config.txt", "r")
 lines = f.read().splitlines()
 f.close()
 
+for i in lines:
+	print(i)
+
 myInfo = lines[line-1]
+print("\n")
+print ("myInfo: ", myInfo)
+
 splittedInfo = myInfo.split(" ")
 myId = int(splittedInfo[0])
 myIp = splittedInfo[1]
 myPort = int(splittedInfo[2])
-print(myId)
-print(myIp)
-print(myPort)
 
 destInfo = lines[0]
-destSplittedInfo = myInfo.split(" ")
+destSplittedInfo = destInfo.split(" ")
 destId = int(destSplittedInfo[0])
 destIp = destSplittedInfo[1]
 destPort = int(destSplittedInfo[2])
 
 while 1:
-	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	print("socket created")
+	tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	
-	s.connect((destIp, destPort))
-	print("socket connected")
+	dest=(str(destIp), int(destPort))
+
+	tcp.connect(dest)
 	
 	message = input('digite algo: ')
-	print(message)
 	bytemessage = str.encode(message)
-	print("encoded")
 	
-	s.send(bytemessage)
-	print("sended")
+	tcp.send(bytemessage)
 
-	data = s.recv(BUFFER_SIZE)
-	print("received")
+	data = tcp.recv(BUFFER_SIZE)
 	
-	s.close()
-	print("closed")
+	tcp.close()
 
 	print ("received data:", data)
 
