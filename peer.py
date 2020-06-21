@@ -181,7 +181,7 @@ while(len(activeNodes) > 0):
 				# remove coordinator from active nodes
 				activeNodes.pop(0)
 				print("coordinator is dead")
-				break
+				
 				# start election
 				# set new coordinator
 				None
