@@ -101,11 +101,12 @@ while not canStart:
 		httpRead = requests.get("http://172.31.62.148:25123/status/")
 		readedValue = httpRead.text.replace("\"","")
 		print(readedValue)
-		time.sleep(3)
 		canStart = True
 	except:
 		print("Host offline")
 		count += 1
+	
+	time.sleep(3)
 	
 
 print("encerrou sem conectar")
