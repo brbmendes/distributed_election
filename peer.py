@@ -59,7 +59,6 @@ class StartCountTimeAlive:
 	def run(self):
 		global me
 		while True:
-			print("am I coordinator",me.isCoordinator)
 			if(me.isCoordinator):
 				while me.timer > 0:
 					me.timer -= 1
@@ -68,7 +67,6 @@ class StartCountTimeAlive:
 						me.isActive = False
 						me.isCoordinator = False
 					time.sleep(1)
-			print("I am dead.")
 			time.sleep(1)
 
 api.add_resource(Status, "/status/")
@@ -177,6 +175,7 @@ while(len(activeNodes) > 0):
 		if(not me.isCoordinator):
 			httpRead = requests.get("http://"+ coordinator.host +":"+ coordinator.port +"/status/")
 			readedValue = httpRead.text.replace("\"","")
+			print(readedValue)
 			# Receive NOK, node is dead...
 			if(readedValue == "NOK"):
 				# remove coordinator from active nodes
@@ -187,7 +186,7 @@ while(len(activeNodes) > 0):
 				# set new coordinator
 				None
 			else:
-				print("Received {} from coordinator ID {}".format(readedValue, coordinator,id))
+				print("Received {} from coordinator ID {}".format(readedValue, coordinator.id))
 	except:
 		None
 	
