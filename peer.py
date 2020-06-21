@@ -18,6 +18,17 @@ class Operation(Resource):
 	def post(self):
 		return "POST OK", 201
 
+class Node:
+	def __init__(self,id,host,port,isCoordinator,isActive,timer,greatherNodes,counterActives):
+		self.id = id
+		self.host = host
+		self.port = port
+		self.isCoordinator = isCoordinator
+		self.isActive = isActive
+		self.timer = timer
+		self.greatherNodes = greatherNodes
+		self.counterActives = counterActives
+
 class ThreadingExample(object):
 	def __init__(self, interval=1):
 		""" Constructor
@@ -26,17 +37,12 @@ class ThreadingExample(object):
 		"""
 		self.interval = interval
 
-		thread = threading.Thread(target=self.run, args=())
+		thread = threading.Thread(target=self.run, args=(app,myIp,myPort))
 		thread.daemon = True
 		thread.start()
 
-	def run(self):
-		""" Method that runs forever """
-		while True:
-			# Do something
-			print('.', end="")
-
-			time.sleep(self.interval)    
+	def run(self,app,myIp,myPort):
+		app.run(host=myIp, port=myPort, debug=True, use_reloader=False)   
 
 api.add_resource(Operation, "/operation/")
 
@@ -56,6 +62,12 @@ myPort = splittedInfo[2]
 print(myIp)
 print(myPort)
 
-example=ThreadingExample()
+example=ThreadingExample(app,myIp,myPort)
 
-app.run(host=myIp, port=myPort, debug=True, use_reloader=False)
+node1 = Node(myId,myIp,myPort,False,True,10,[],1)
+
+print("meu id:", node1.id)
+
+while 1:
+	print("eita")
+	time.sleep(3)
