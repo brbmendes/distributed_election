@@ -96,9 +96,11 @@ example=RunFlask(app,myIp,myPort)
 
 count = 0
 while not canStart:
+	print("running")
 	# Check if greather nodes are online
 	for i in me.greatherNodes:
 		if not i.isActive:
+			print("get on host",i.host)
 			try:
 				# If node is online, and send back response
 				httpRead = requests.get("http://"+ i.host +":"+ i.port +"/status/")
@@ -114,6 +116,7 @@ while not canStart:
 	# Check if lesser nodes are online
 	for i in me.lesserNodes:
 		if not i.isActive:
+			print("get on host",i.host)
 			try:
 				# If node is online, and send back response
 				httpRead = requests.get("http://"+ i.host +":"+ i.port +"/status/")
