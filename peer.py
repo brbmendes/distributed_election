@@ -188,6 +188,7 @@ while(len(activeNodes) > 0):
 			else:
 				print("Received {} from coordinator ID {}".format(readedValue, coordinator.id))
 	except:
+		print("coordinator null")
 		None
 	
 	time.sleep(3)
