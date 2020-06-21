@@ -53,11 +53,12 @@ class StartCountTimeAlive:
 
 	def run(self):
 		global me
-		me.timer -= 1
-		print(me.timer)
-		if(me.timer <= 0):
-			me.isActive = False
-		time.sleep(1)
+		while me.timer > 0:
+			me.timer -= 1
+			print(me.timer)
+			if(me.timer <= 0):
+				me.isActive = False
+			time.sleep(1)
 		
 
 api.add_resource(Status, "/status/")
