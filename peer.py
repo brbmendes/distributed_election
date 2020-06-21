@@ -12,7 +12,7 @@ api = Api(app)
 class Status(Resource):
 	def get(self):
 		global me
-		msg = "meu id eh" + str(me.id)
+		msg = "meu id eh " + str(me.id)
 		return msg, 200
 
 	def put(self):
@@ -40,7 +40,7 @@ class RunFlask:
 		thread.start()
 
 	def run(self,app,myIp,myPort):
-		app.run(host=myIp, port=myPort, debug=True, use_reloader=False)   
+		app.run(host=myIp, port=myPort, debug=False, use_reloader=False)   
 
 
 api.add_resource(Status, "/status/")
@@ -87,13 +87,12 @@ for i in lines:
 	else:
 		me.greatherNodes.append(node)
 
+# Define me as coordinator
+coordinator = me
 
 example=RunFlask(app,myIp,myPort)
 
 
-
-print("meu id:", me.id)
-
 while 1:
-	print("eita")
+	print("id do coordenador: ", coordinator.id)
 	time.sleep(3)
