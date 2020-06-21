@@ -32,7 +32,7 @@ if __name__ == '__main__':
 	count=0
 	while True:
 		if(count > 2):break
-		httpRead = requests.get("http://"+ destIp +":" + destPort +"/operation/")
+		httpRead = requests.get("http://"+ destIp +":" + destPort +"/status/")
 		readedValue = httpRead.text.replace("\"","")
 		print(readedValue)
 		count += 1
