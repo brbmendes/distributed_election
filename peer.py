@@ -24,7 +24,7 @@ class Status(Resource):
 		return "POST OK", 201
 
 class Node:
-	def __init__(self,id,host,port,isCoordinator,isActive,timer,greatherNodes,lesserNodes,counterActives):
+	def __init__(self,id,host,port,isActive,timer,greatherNodes,lesserNodes):
 		self.id = id
 		self.host = host
 		self.port = port
