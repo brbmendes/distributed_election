@@ -163,6 +163,8 @@ activeNodes.sort(key=lambda x: x.id, reverse=True)
 
 # Set coordinator as the greather id of nodes
 coordinator = activeNodes[0]
+if(coordinator.id == me.id):
+	me.isCoordinator = True
 
 # start counting my time alive
 nodealive = StartCountTimeAlive()
