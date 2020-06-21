@@ -34,6 +34,7 @@ class Node:
 		self.host = host
 		self.port = port
 		self.isActive = isActive
+		self.isCoordinator = False
 		self.timer = timer
 		self.greatherNodes = greatherNodes
 		self.lesserNodes = lesserNodes
@@ -57,12 +58,16 @@ class StartCountTimeAlive:
 
 	def run(self):
 		global me
-		if(coordinator.id == me.id):
-			while me.timer > 0:
-				me.timer -= 1
-				if(me.timer <= 0):
-					me.isActive = False
-				time.sleep(1)
+		while True:
+			print("am I coordinator",me.isCoordinator)
+			if(me.isCoordinator):
+				while me.timer > 0:
+					me.timer -= 1
+					print(me.timer)
+					if(me.timer <= 0):
+						me.isActive = False
+					time.sleep(1)
+			time.sleep(1)
 
 api.add_resource(Status, "/status/")
 
@@ -108,9 +113,6 @@ for i in lines:
 		me.lesserNodes.append(node)
 	else:
 		me.greatherNodes.append(node)
-
-# Define me as coordinator
-coordinator = me
 
 # Run webservice in separated thread to receive messages
 #example=RunFlask(app,myIp,myPort)
