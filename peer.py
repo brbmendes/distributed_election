@@ -59,7 +59,6 @@ def main():
 
 	# Set number of all nodes
 	qtdNodes = len(lines)
-	print("qtd nodes:",qtdNodes)
 
 	# Get my info
 	info = lines[line-1]
@@ -73,9 +72,6 @@ def main():
 
 	# Add my node to lists
 	activeNodes.append(me)
-	print("active nodes")
-	for i in activeNodes:
-		print(activeNodes.id)
 	
 	# Remove my line from array
 	lines.pop(line-1)
@@ -88,7 +84,7 @@ def main():
 	for i in lines:
 		splittedInfo = i.split(" ")
 		node = Node(splittedInfo[0],splittedInfo[1],splittedInfo[2],False,True,10,[],[],1)
-		if(myId > splittedInfo[0]):
+		if(myId > int(splittedInfo[0])):
 			me.lesserNodes.append(node)
 		else:
 			me.greatherNodes.append(node)
