@@ -81,7 +81,7 @@ lines.pop(line-1)
 # Create other nodes, define nodes greather than me and lesser than me
 for i in lines:
 	splittedInfo = i.split(" ")
-	node = Node(splittedInfo[0],splittedInfo[1],splittedInfo[2],True,10,[],[])
+	node = Node(splittedInfo[0],splittedInfo[1],splittedInfo[2],False,10,[],[])
 	if(myId > int(splittedInfo[0])):
 		me.lesserNodes.append(node)
 	else:
@@ -98,8 +98,6 @@ count = 0
 while not canStart:
 	print("running")
 	# Check if greather nodes are online
-	for i in me.greatherNodes:
-		print(i.id)
 	for i in me.greatherNodes:
 		if not i.isActive:
 			print("get on host",i.host)
@@ -131,7 +129,10 @@ while not canStart:
 			except:
 				print("Host offline:",i.host)
 
-	if len(activeNodes) == qtdNodes:
+	print("number active nodes",len(activeNodes))
+	print("qtd nodes",qtdNodes)
+
+	if len(activeNodes) == int(qtdNodes):
 		canStart = True
 	
 	time.sleep(3)
