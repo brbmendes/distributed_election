@@ -12,7 +12,7 @@ api = Api(app)
 class Status(Resource):
 	def get(self):
 		global me
-		msg = "meu id eh" + me.id
+		msg = "meu id eh" + str(me.id)
 		return msg, 200
 
 	def put(self):
