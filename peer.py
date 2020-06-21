@@ -126,7 +126,7 @@ while not canStart:
 			except:
 				print("Host offline:",i.host)
 
-	if len(activeNodes == qtdNodes):
+	if len(activeNodes) == qtdNodes:
 		canStart = True
 
 activeNodes.sort(key=lambda x: x.id, reverse=True)
