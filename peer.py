@@ -31,6 +31,9 @@ class Node:
 		self.timer = timer
 		self.greatherNodes = greatherNodes
 		self.lesserNodes = lesserNodes
+	
+	def get_id(node):
+		return 
 
 class RunFlask:
 	def __init__(self, app,myIp,myPort):
@@ -94,7 +97,7 @@ for i in me.greatherNodes:
 	print(i.id)
 
 print("sort")
-me.greatherNodes.sort(key=self.id, reversed=True)
+me.greatherNodes.sort(key=lambda x: x.id, reversed=True)
 
 for i in me.greatherNodes:
 	print(i.id)
