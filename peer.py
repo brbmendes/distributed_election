@@ -94,7 +94,7 @@ for i in me.greatherNodes:
 	print(i.id)
 
 print("sort")
-me.greatherNodes.sort(key=lambda x: x.id, reversed=True)
+me.greatherNodes.sort(key=lambda x: x.id, reverse=True)
 
 for i in me.greatherNodes:
 	print(i.id)
