@@ -30,12 +30,11 @@ class Node:
 		self.counterActives = counterActives
 
 class ThreadingExample(object):
-	def __init__(self, interval=1):
+	def __init__(self, app,myIp,myPort):
 		""" Constructor
 		:type interval: int
 		:param interval: Check interval, in seconds
 		"""
-		self.interval = interval
 
 		thread = threading.Thread(target=self.run, args=(app,myIp,myPort))
 		thread.daemon = True
