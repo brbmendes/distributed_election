@@ -1,5 +1,6 @@
-# Alunos: 		Bruno Mendes e Ezequiel Rinco
-# Estratégia: 	Algoritmo Centralizado
+# Alunos: 		Bruno Mendes, Ezequiel Rinco e xxx
+# Trabalho 2:	Eleição Distribuída - Algoritmo do Valentão (Bully Algorithm)
+# Disciplina:	Programação Distribuída 
 
 from flask import Flask
 from flask_restful import Api, Resource, reqparse
@@ -8,7 +9,7 @@ import sys,threading,time
 app = Flask(__name__)
 api = Api(app)
 
-class Operation(Resource):
+class Status(Resource):
 	def get(self):
 		return "GET OK", 200
 
@@ -29,7 +30,7 @@ class Node:
 		self.greatherNodes = greatherNodes
 		self.counterActives = counterActives
 
-class Run_Flask:
+class RunFlask:
 	def __init__(self, app,myIp,myPort):
 		thread = threading.Thread(target=self.run, args=(app,myIp,myPort))
 		thread.daemon = True
@@ -38,30 +39,42 @@ class Run_Flask:
 	def run(self,app,myIp,myPort):
 		app.run(host=myIp, port=myPort, debug=True, use_reloader=False)   
 
-api.add_resource(Operation, "/operation/")
+def main():
+	api.add_resource(Status, "/status/")
 
-line = int(sys.argv[2])
+	isRunningElection = False
+	listedNodes = []
+	activeNodes = []
+	canStart = False
 
-f = open(sys.argv[1], "r")
-lines = f.read().splitlines()
-f.close()
+	line = int(sys.argv[2])
 
-myInfo = lines[line-1]
+	f = open(sys.argv[1], "r")
+	lines = f.read().splitlines()
+	f.close()
 
-splittedInfo = myInfo.split(" ")
-myId = int(splittedInfo[0])
-myIp = splittedInfo[1]
-myPort = splittedInfo[2]
+	myInfo = lines[line-1]
 
-print(myIp)
-print(myPort)
+	splittedInfo = myInfo.split(" ")
+	myId = int(splittedInfo[0])
+	myIp = splittedInfo[1]
+	myPort = splittedInfo[2]
 
-example=ThreadingExample(app,myIp,myPort)
+	print(myIp)
+	print(myPort)
 
-node1 = Node(myId,myIp,myPort,False,True,10,[],1)
+	example=RunFlask(app,myIp,myPort)
 
-print("meu id:", node1.id)
+	node1 = Node(myId,myIp,myPort,False,True,10,[],1)
 
-while 1:
-	print("eita")
-	time.sleep(3)
+	print("meu id:", node1.id)
+
+	while 1:
+		print("eita")
+		time.sleep(3)
+
+
+if __name__ == "__main__":
+    main()
+
+
