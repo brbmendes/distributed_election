@@ -12,8 +12,7 @@ api = Api(app)
 class Status(Resource):
 	def get(self):
 		global me
-		msg = "meu id eh " + str(me.id)
-		return msg, 200
+		return str(me.id), 200
 
 	# Put é usado para avisar que outro nodo esta ativo
 	def put(self):
@@ -91,22 +90,54 @@ for i in lines:
 # Define me as coordinator
 coordinator = me
 
-# Run webservice in separated thread to receive messages
-example=RunFlask(app,myIp,myPort)
+for i in me.greatherNodes:
+	print(i.id)
+
+print("sort")
+me.greatherNodes.sort(key=id)
+
+for i in me.greatherNodes:
+	print(i.id)
+
+canStart = True
+## Run webservice in separated thread to receive messages
+#example=RunFlask(app,myIp,myPort)
+
 
 count = 0
 while not canStart:
-	try:
-		if(count >= 3): break
-		httpRead = requests.get("http://172.31.62.148:25123/status/")
-		readedValue = httpRead.text.replace("\"","")
-		print(readedValue)
+	# Check if greather nodes are online
+	for i in me.greatherNodes:
+		if not i.isActive:
+			try:
+				# If node is online, and send back response
+				httpRead = requests.get("http://"+ i.host +":"+ i.port +"/status/")
+				readedValue = httpRead.text.replace("\"","")
+				# Set node as active
+				print("id do nodo ativo:",readedValue)
+				i.isActive = True
+				# Append node on active nodes list
+				activeNodes.append(i)
+			except:
+				print("Host offline")
+	
+	# Check if lesser nodes are online
+	for i in me.lesserNodes:
+		if not i.isActive:
+			try:
+				# If node is online, and send back response
+				httpRead = requests.get("http://"+ i.host +":"+ i.port +"/status/")
+				readedValue = httpRead.text.replace("\"","")
+				# Set node as active
+				print("id do nodo ativo:",readedValue)
+				i.isActive = True
+				# Append node on active nodes list
+				activeNodes.append(i)
+			except:
+				print("Host offline")
+
+	if len(activeNodes == qtdNodes):
 		canStart = True
-	except:
-		print("Host offline")
-		count += 1
-	
-	time.sleep(3)
-	
+
 
 print("encerrou sem conectar")
