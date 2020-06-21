@@ -103,7 +103,7 @@ while not canStart:
 		print(readedValue)
 		time.sleep(3)
 		canStart = True
-	except ConnectionError:
+	except (ConnectionRefusedError,ConnectionError):
 		print("Host offline")
 		count += 1
 	
