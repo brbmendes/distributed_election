@@ -157,6 +157,7 @@ while not canStart:
 	
 	time.sleep(1)
 
+print("starting")
 # Sort active nodes to get coordinator
 activeNodes.sort(key=lambda x: x.id, reverse=True)
 
@@ -169,17 +170,18 @@ nodealive = StartCountTimeAlive()
 # At this point, we know de coordinator ID
 while(len(activeNodes) > 0):
 	try:
-		httpRead = requests.get("http://"+ coordinator.host +":"+ coordinator.port +"/status/")
-		readedValue = httpRead.text.replace("\"","")
-		# Receive NOK, node is dead...
-		if(readedValue == "NOK"):
-			# remove coordinator from active nodes
-			activeNodes.pop(0)
-			print("coordinator is dead")
-			break
-			# start election
-			# set new coordinator
-			None
+		if(not me.isCoordinator):
+			httpRead = requests.get("http://"+ coordinator.host +":"+ coordinator.port +"/status/")
+			readedValue = httpRead.text.replace("\"","")
+			# Receive NOK, node is dead...
+			if(readedValue == "NOK"):
+				# remove coordinator from active nodes
+				activeNodes.pop(0)
+				print("coordinator is dead")
+				break
+				# start election
+				# set new coordinator
+				None
 	except:
 		None
 	
