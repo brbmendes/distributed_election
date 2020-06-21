@@ -172,12 +172,12 @@ nodealive = StartCountTimeAlive()
 # At this point, we know de coordinator ID
 while(len(activeNodes) > 0):
 	try:
-		if(not me.isCoordinator):
+		if(not me.isCoordinator and me.isActive):
 			httpRead = requests.get("http://"+ coordinator.host +":"+ coordinator.port +"/status/")
 			readedValue = httpRead.text.replace("\"","")
 			print(readedValue)
 			# Receive NOK, node is dead...
-			if(readedValue == "NOK"):
+			if("NOK" in readedValue):
 				# remove coordinator from active nodes
 				activeNodes.pop(0)
 				print("coordinator is dead")
