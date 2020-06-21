@@ -96,11 +96,11 @@ example=RunFlask(app,myIp,myPort)
 
 count = 0
 while not canStart:
-	print("running")
+	print("greather")
 	# Check if greather nodes are online
 	for i in me.greatherNodes:
 		if not i.isActive:
-			print("get on host",i.host)
+			print("Get on host {}, port {}".format(i.host, i.port))
 			try:
 				# If node is online, and send back response
 				httpRead = requests.get("http://"+ i.host +":"+ i.port +"/status/")
@@ -111,12 +111,14 @@ while not canStart:
 				# Append node on active nodes list
 				activeNodes.append(i)
 			except:
-				print("Host offline:",i.host)
+				print("Host {}, port {} offline".format(i.host, i.port))
 	
+	print("")
 	# Check if lesser nodes are online
+	print("lesser")
 	for i in me.lesserNodes:
 		if not i.isActive:
-			print("get on host",i.host)
+			print("Get on host {}, port {}".format(i.host, i.port))
 			try:
 				# If node is online, and send back response
 				httpRead = requests.get("http://"+ i.host +":"+ i.port +"/status/")
@@ -127,7 +129,7 @@ while not canStart:
 				# Append node on active nodes list
 				activeNodes.append(i)
 			except:
-				print("Host offline:",i.host)
+				print("Host {}, port {} offline".format(i.host, i.port))
 
 	print("number active nodes",len(activeNodes))
 	print("qtd nodes",qtdNodes)
@@ -135,7 +137,7 @@ while not canStart:
 	if len(activeNodes) == int(qtdNodes):
 		canStart = True
 	
-	time.sleep(3)
+	time.sleep(5)
 
 activeNodes.sort(key=lambda x: x.id, reverse=True)
 
