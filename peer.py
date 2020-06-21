@@ -99,6 +99,8 @@ while not canStart:
 	print("running")
 	# Check if greather nodes are online
 	for i in me.greatherNodes:
+		print(i.id)
+	for i in me.greatherNodes:
 		if not i.isActive:
 			print("get on host",i.host)
 			try:
