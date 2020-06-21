@@ -12,13 +12,17 @@ api = Api(app)
 class Status(Resource):
 	def get(self):
 		global me
-		return str(me.id), 200
+		if me.isActive:
+			return "OK", 200
+		else:
+			return "NOK", 200
+		
 
 	# Put é usado para avisar que outro nodo esta ativo
 	def put(self):
 		return "PUT OK", 201
 	
-	# Post é usado para aviasr que é o novo coordenador
+	# Post é usado para avisar que é o novo coordenador
 	def post(self):
 		return "POST OK", 201
 
@@ -41,6 +45,20 @@ class RunFlask:
 	def run(self,app,myIp,myPort):
 		app.run(host=myIp, port=myPort, debug=False, use_reloader=False)   
 
+class StartCountTimeAlive:
+	def __init__(self):
+		thread = threading.Thread(target=self.run, args=())
+		thread.daemon = True
+		thread.start()
+
+	def run(self):
+		global me
+		me.timer -= 1
+		print(me.timer)
+		if(me.timer <= 0):
+			me.isActive = False
+		time.sleep(1)
+		
 
 api.add_resource(Status, "/status/")
 
@@ -91,10 +109,11 @@ for i in lines:
 coordinator = me
 
 # Run webservice in separated thread to receive messages
-example=RunFlask(app,myIp,myPort)
+#example=RunFlask(app,myIp,myPort)
+flask = RunFlask(app,myIp,myPort)
+nodealive = StartCountTimeAlive()
 
-
-count = 0
+# While all nodes are not online
 while not canStart:
 	# Check if greather nodes are online
 	for i in me.greatherNodes:
@@ -104,42 +123,51 @@ while not canStart:
 				httpRead = requests.get("http://"+ i.host +":"+ i.port +"/status/")
 				readedValue = httpRead.text.replace("\"","")
 				# Set node as active
-				print("id do nodo ativo:",readedValue)
+				# print("id do nodo ativo:",readedValue)
 				i.isActive = True
 				# Append node on active nodes list
 				activeNodes.append(i)
 			except:
-				print("Host {}, port {} offline".format(i.host, i.port))
+				None
+				# print("Host {}, port {} offline".format(i.host, i.port))
 	
 	# Check if lesser nodes are online
 	for i in me.lesserNodes:
 		if not i.isActive:
-			print("Get on host {}, port {}".format(i.host, i.port))
 			try:
 				# If node is online, and send back response
 				httpRead = requests.get("http://"+ i.host +":"+ i.port +"/status/")
 				readedValue = httpRead.text.replace("\"","")
 				# Set node as active
-				print("id do nodo ativo:",readedValue)
+				# print("id do nodo ativo:",readedValue)
 				i.isActive = True
 				# Append node on active nodes list
 				activeNodes.append(i)
 			except:
-				print("Host {}, port {} offline".format(i.host, i.port))
-
-	print("number active nodes",len(activeNodes))
-	print("qtd nodes",qtdNodes)
-	print("")
+				None
+				# print("Host {}, port {} offline".format(i.host, i.port))
 
 	if len(activeNodes) == int(qtdNodes):
 		canStart = True
 	
-	time.sleep(5)
+	time.sleep(1)
 
+# Sort active nodes to get coordinator
 activeNodes.sort(key=lambda x: x.id, reverse=True)
 
 coordinator = activeNodes[0]
 
-print("coordinator id",coordinator.id)
+while True:
+	None
+# At this point, we know de coordinator ID
+# while(len(activeNodes) > 0):
+# 	try:
+# 		httpRead = requests.get("http://"+ coordinator.host +":"+ coordinator.port +"/status/")
+# 		readedValue = httpRead.text.replace("\"","")
+# 	except:
+# 		None
+	
+# 	time.sleep(3)
 
-print("encerrou sem conectar")
+
+print("End of Program")
