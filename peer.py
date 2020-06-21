@@ -90,18 +90,8 @@ for i in lines:
 # Define me as coordinator
 coordinator = me
 
-for i in me.greatherNodes:
-	print(i.id)
-
-print("sort")
-me.greatherNodes.sort(key=lambda x: x.id, reverse=True)
-
-for i in me.greatherNodes:
-	print(i.id)
-
-canStart = True
-## Run webservice in separated thread to receive messages
-#example=RunFlask(app,myIp,myPort)
+# Run webservice in separated thread to receive messages
+example=RunFlask(app,myIp,myPort)
 
 
 count = 0
@@ -119,7 +109,7 @@ while not canStart:
 				# Append node on active nodes list
 				activeNodes.append(i)
 			except:
-				print("Host offline")
+				print("Host offline:",i.host)
 	
 	# Check if lesser nodes are online
 	for i in me.lesserNodes:
@@ -134,10 +124,13 @@ while not canStart:
 				# Append node on active nodes list
 				activeNodes.append(i)
 			except:
-				print("Host offline")
+				print("Host offline:",i.host)
 
 	if len(activeNodes == qtdNodes):
 		canStart = True
 
+activeNodes.sort(key=lambda x: x.id, reverse=True)
+
+coordinator = activeNodes[0]
 
 print("encerrou sem conectar")
