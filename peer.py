@@ -131,6 +131,8 @@ while not canStart:
 
 	if len(activeNodes) == qtdNodes:
 		canStart = True
+	
+	time.sleep(3)
 
 activeNodes.sort(key=lambda x: x.id, reverse=True)
 
