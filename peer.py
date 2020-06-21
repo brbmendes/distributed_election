@@ -1,4 +1,4 @@
-# Alunos: 		Bruno Mendes, Ezequiel Rinco e xxx
+# Alunos: 		
 # Trabalho 2:	Eleição Distribuída - Algoritmo do Valentão (Bully Algorithm)
 # Disciplina:	Programação Distribuída 
 
@@ -10,6 +10,7 @@ app = Flask(__name__)
 api = Api(app)
 
 class Status(Resource):
+	# Get is used to check node status
 	def get(self):
 		global me
 		if me.isActive:
@@ -18,14 +19,15 @@ class Status(Resource):
 			return "NOK", 200
 		
 
-	# Put é usado para avisar que outro nodo esta ativo
+	# Put is used to run election
 	def put(self):
 		return "PUT OK", 201
 	
-	# Post é usado para avisar que é o novo coordenador
+	# Post is used to tell everyone who is the new coordinator
 	def post(self):
 		return "POST OK", 201
 
+# Node info
 class Node:
 	def __init__(self,id,host,port,isActive,timer,greatherNodes,lesserNodes):
 		self.id = id
@@ -36,6 +38,7 @@ class Node:
 		self.greatherNodes = greatherNodes
 		self.lesserNodes = lesserNodes
 
+# Thread to run flask
 class RunFlask:
 	def __init__(self, app,myIp,myPort):
 		thread = threading.Thread(target=self.run, args=(app,myIp,myPort))
@@ -45,6 +48,7 @@ class RunFlask:
 	def run(self,app,myIp,myPort):
 		app.run(host=myIp, port=myPort, debug=False, use_reloader=False)   
 
+# Thread to control if node is alive or dead
 class StartCountTimeAlive:
 	def __init__(self):
 		thread = threading.Thread(target=self.run, args=())
@@ -55,12 +59,9 @@ class StartCountTimeAlive:
 		global me
 		while me.timer > 0:
 			me.timer -= 1
-			print("still alive for {} seconds", me.timer)
 			if(me.timer <= 0):
 				me.isActive = False
 			time.sleep(1)
-		print("am I dead?", not me.isActive)
-		
 
 api.add_resource(Status, "/status/")
 
@@ -159,17 +160,22 @@ activeNodes.sort(key=lambda x: x.id, reverse=True)
 
 coordinator = activeNodes[0]
 
-while True:
-	None
 # At this point, we know de coordinator ID
-# while(len(activeNodes) > 0):
-# 	try:
-# 		httpRead = requests.get("http://"+ coordinator.host +":"+ coordinator.port +"/status/")
-# 		readedValue = httpRead.text.replace("\"","")
-# 	except:
-# 		None
+while(len(activeNodes) > 0):
+	try:
+		httpRead = requests.get("http://"+ coordinator.host +":"+ coordinator.port +"/status/")
+		readedValue = httpRead.text.replace("\"","")
+		# Receive NOK, node is dead...
+		if(readedValue == "NOK"):
+			# remove coordinator from active nodes
+			activeNodes.pop(0)
+			# start election
+			# set new coordinator
+			None
+	except:
+		None
 	
-# 	time.sleep(3)
+	time.sleep(3)
 
 
 print("End of Program")
