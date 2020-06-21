@@ -29,13 +29,8 @@ class Node:
 		self.greatherNodes = greatherNodes
 		self.counterActives = counterActives
 
-class ThreadingExample(object):
+class Run_Flask:
 	def __init__(self, app,myIp,myPort):
-		""" Constructor
-		:type interval: int
-		:param interval: Check interval, in seconds
-		"""
-
 		thread = threading.Thread(target=self.run, args=(app,myIp,myPort))
 		thread.daemon = True
 		thread.start()
