@@ -20,7 +20,7 @@ class Status(Resource):
 		return "POST OK", 201
 
 class Node:
-	def __init__(self,id,host,port,isCoordinator,isActive,timer,greatherNodes,counterActives):
+	def __init__(self,id,host,port,isCoordinator,isActive,timer,greatherNodes,lesserNodes,counterActives):
 		self.id = id
 		self.host = host
 		self.port = port
@@ -28,6 +28,7 @@ class Node:
 		self.isActive = isActive
 		self.timer = timer
 		self.greatherNodes = greatherNodes
+		self.lesserNodes = lesserNodes
 		self.counterActives = counterActives
 
 class RunFlask:
@@ -42,36 +43,73 @@ class RunFlask:
 def main():
 	api.add_resource(Status, "/status/")
 
-	isRunningElection = False
-	listedNodes = []
+	coordinator = None
 	activeNodes = []
 	canStart = False
+	qtdNodes = 0
 
+	# Get my line
 	line = int(sys.argv[2])
 
+	# Open and read all lines
+	# Split into array "lines"
 	f = open(sys.argv[1], "r")
 	lines = f.read().splitlines()
 	f.close()
 
-	myInfo = lines[line-1]
+	# Set number of all nodes
+	qtdNodes = len(lines)
+	print("qtd nodes:",qtdNodes)
 
-	splittedInfo = myInfo.split(" ")
+	# Get my info
+	info = lines[line-1]
+	splittedInfo = info.split(" ")
 	myId = int(splittedInfo[0])
 	myIp = splittedInfo[1]
 	myPort = splittedInfo[2]
 
-	print(myIp)
-	print(myPort)
+	# Create my node
+	me = Node(myId,myIp,myPort,False,True,10,[],[],1)
 
-	example=RunFlask(app,myIp,myPort)
+	# Add my node to lists
+	activeNodes.append(me)
+	print("active nodes")
+	for i in activeNodes:
+		print(activeNodes.id)
+	
+	# Remove my line from array
+	lines.pop(line-1)
 
-	node1 = Node(myId,myIp,myPort,False,True,10,[],1)
+	print("remaining lines")
+	for i in lines:
+		print(i)
 
-	print("meu id:", node1.id)
+	# Create other nodes, define nodes greather than me and lesser than me
+	for i in lines:
+		splittedInfo = i.split(" ")
+		node = Node(splittedInfo[0],splittedInfo[1],splittedInfo[2],False,True,10,[],[],1)
+		if(myId > splittedInfo[0]):
+			me.lesserNodes.append(node)
+		else:
+			me.greatherNodes.append(node)
 
-	while 1:
-		print("eita")
-		time.sleep(3)
+	print ("greather")
+	for i in me.greatherNodes:
+		print(i.id)
+
+	print ("lesser")
+	for i in me.lesserNodes:
+		print(i.id)
+	
+	#example=RunFlask(app,myIp,myPort)
+
+	
+
+	print("meu id:", me.id)
+
+	# while 1:
+	# 	print("eita")
+	# 	time.sleep(3)
 
 
 if __name__ == "__main__":
