@@ -94,6 +94,6 @@ example=RunFlask(app,myIp,myPort)
 
 print("meu id:", me.id)
 
-# while 1:
-# 	print("eita")
-# 	time.sleep(3)
+while 1:
+	print("eita")
+	time.sleep(3)
