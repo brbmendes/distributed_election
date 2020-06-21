@@ -184,7 +184,6 @@ while(len(activeNodes) > 0):
 				
 				# start election
 				# set new coordinator
-				None
 			else:
 				print("Received {} from coordinator ID {}".format(readedValue, coordinator.id))
 	except:
