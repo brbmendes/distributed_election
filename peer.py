@@ -66,7 +66,9 @@ class StartCountTimeAlive:
 					print(me.timer)
 					if(me.timer <= 0):
 						me.isActive = False
+						me.isCoordinator = False
 					time.sleep(1)
+			print("I am dead.")
 			time.sleep(1)
 
 api.add_resource(Status, "/status/")
@@ -184,6 +186,8 @@ while(len(activeNodes) > 0):
 				# start election
 				# set new coordinator
 				None
+			else:
+				print("Received {} from coordinator ID {}".format(readedValue, coordinator,id))
 	except:
 		None
 	
