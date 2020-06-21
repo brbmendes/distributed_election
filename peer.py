@@ -96,11 +96,16 @@ example=RunFlask(app,myIp,myPort)
 
 count = 0
 while not canStart:
-	httpRead = requests.get("http://172.31.62.148:25123/status/")
-	readedValue = httpRead.text.replace("\"","")
-	print(readedValue)
-	time.sleep(3)
-	canStart = True
+	try:
+		if(count >= 3): break
+		httpRead = requests.get("http://172.31.62.148:25123/status/")
+		readedValue = httpRead.text.replace("\"","")
+		print(readedValue)
+		time.sleep(3)
+		canStart = True
+	except ConnectionError:
+		print("Host offline")
+		count += 1
 	
 
-print("encerrou")
+print("encerrou sem conectar")
