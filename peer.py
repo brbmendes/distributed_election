@@ -57,11 +57,12 @@ class StartCountTimeAlive:
 
 	def run(self):
 		global me
-		while me.timer > 0:
-			me.timer -= 1
-			if(me.timer <= 0):
-				me.isActive = False
-			time.sleep(1)
+		if(coordinator.id == me.id):
+			while me.timer > 0:
+				me.timer -= 1
+				if(me.timer <= 0):
+					me.isActive = False
+				time.sleep(1)
 
 api.add_resource(Status, "/status/")
 
@@ -114,7 +115,6 @@ coordinator = me
 # Run webservice in separated thread to receive messages
 #example=RunFlask(app,myIp,myPort)
 flask = RunFlask(app,myIp,myPort)
-nodealive = StartCountTimeAlive()
 
 # While all nodes are not online
 while not canStart:
@@ -158,7 +158,11 @@ while not canStart:
 # Sort active nodes to get coordinator
 activeNodes.sort(key=lambda x: x.id, reverse=True)
 
+# Set coordinator as the greather id of nodes
 coordinator = activeNodes[0]
+
+# start counting my time alive
+nodealive = StartCountTimeAlive()
 
 # At this point, we know de coordinator ID
 while(len(activeNodes) > 0):
@@ -169,6 +173,8 @@ while(len(activeNodes) > 0):
 		if(readedValue == "NOK"):
 			# remove coordinator from active nodes
 			activeNodes.pop(0)
+			print("coordinator is dead")
+			break
 			# start election
 			# set new coordinator
 			None
