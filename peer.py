@@ -199,7 +199,7 @@ while(len(activeNodes) > 0):
                 activeNodes.pop(0)
                 print("Starting a new election...")
 
-				# [Todo] bully algorithm implementation
+                # [Todo] bully algorithm implementation
 
                 # get id of active nodes
                 activeIds = []
@@ -214,6 +214,7 @@ while(len(activeNodes) > 0):
                 if(not any(node.isCoordinator == True for node in activeNodes)):
                     coordinator = activeNodes[0]
                     activeNodes[0].isCoordinator = True
+                    print("c {} - (End of Election)".format(activeNodes[0].id))
 
             else:
                 print("Received {} from coordinator ID {}".format(
