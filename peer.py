@@ -1,4 +1,4 @@
-# Alunos:
+# Alunos: Bruno Mendes, Ezequiel Rinco, Mathias Falci
 # Trabalho 2:	Eleição Distribuída - Algoritmo do Valentão (Bully Algorithm)
 # Disciplina:	Programação Distribuída
 
