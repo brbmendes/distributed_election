@@ -23,7 +23,6 @@ class Status(Resource):
             return "NOK", 200
 
     # Put is used to run election
-
     def put(self):
         return "PUT OK", 201
 
@@ -44,6 +43,7 @@ class Node:
         self.timer = timer
         self.greatherNodes = greatherNodes
         self.lesserNodes = lesserNodes
+        self.possibleCoordinator = False
 
 # Thread to run flask
 
@@ -184,11 +184,50 @@ if(coordinator.id == me.id):
 # start counting my time alive
 nodealive = StartCountTimeAlive()
 
+# Variable to handle election mode
+electionMode = False
+
+
+def setPossibleCoordinators(nodes):
+    for node in nodes:
+        node.possibleCoordinator = True
+
+
+def getIdOfGreatherNodes(nodes):
+    higherIds = []
+    for node in nodes:
+        higherIds.append(node.id)
+    return higherIds
+
 
 # At this point, we know de coordinator ID
 while(len(activeNodes) > 0):
     try:
-        if(not me.isCoordinator and me.isActive):
+        while(electionMode):
+
+            # if(electionMode):
+            print("election started")
+
+            # find node that started election
+            currNode = next(
+                (node for node in activeNodes if node.possibleCoordinator == True), None)
+            print("nodo que startou a eleição {}".format(currNode.id))
+
+            # update all nodes that can be a coordinator
+            setPossibleCoordinators(currNode.greatherNodes)
+
+            # get list of ids of greather nodes
+            ids = getIdOfGreatherNodes(currNode.greatherNodes)
+            print('e [%s] - (Election Start)' %
+                  ', '.join(map(str, ids)))
+
+            # while(electionMode):
+            if(not me.isCoordinator and me.isActive and me.possibleCoordinator):
+                print("Id {}".format(me.id))
+
+            time.sleep(1)
+
+        if(not me.isCoordinator and me.isActive and not electionMode):
             httpRead = requests.get(
                 "http://" + coordinator.host + ":" + coordinator.port + "/status/")
             readedValue = httpRead.text.replace("\"", "")
@@ -199,21 +238,28 @@ while(len(activeNodes) > 0):
                 activeNodes.pop(0)
                 print("Starting a new election...")
 
-				# [Todo] bully algorithm implementation
+                # set election mode and set current node as possible coordinator,
+                electionMode = True
+                me.possibleCoordinator = True
+
+                # requests.put("http://192.168.0.5:25121/status/")
+
+                # [Todo] bully algorithm implementation
 
                 # get id of active nodes
-                activeIds = []
-                for node in activeNodes:
-                    activeIds.append(node.id)
+                # activeIds = []
+                # for node in activeNodes:
+                #     activeIds.append(node.id)
 
                 # print the list of nodes that will receive the message
-                print('e [%s] - (Election Start)' %
-                      ', '.join(map(str, activeIds)))
+                # print('e [%s] - (Election Start)' %
+                #       ', '.join(map(str, activeIds)))
 
                 # updates the coordinator with the node with the highest id
-                if(not any(node.isCoordinator == True for node in activeNodes)):
-                    coordinator = activeNodes[0]
-                    activeNodes[0].isCoordinator = True
+                # if(not any(node.isCoordinator == True for node in activeNodes)):
+                #     coordinator = activeNodes[0]
+                #     activeNodes[0].isCoordinator = True
+                #     print("c {} - (End of Election)".format(activeNodes[0].id))
 
             else:
                 print("Received {} from coordinator ID {}".format(
